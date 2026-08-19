@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue — WOODIN Cameroun</title>
+  <meta name="description" content="Catalogue WOODIN Cameroun : pagnes 4 et 6 yards, prêt-à-porter. Commandez via WhatsApp +237 693 18 39 18.">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-body text-body">
+  <!-- Navbar -->
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark fixed-top py-3 bg-dark-opaque">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="brand-title">WOODIN</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link active" href="catalogue.html">Catalogue</a></li>
+          <li class="nav-item"><a class="nav-link" href="boutiques.html">Boutiques</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item d-none d-lg-block ms-2">
+            <a class="nav-link position-relative" href="#" title="Panier">
+              <i class="fa-solid fa-basket-shopping"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary-woodin">0</span>
+            </a>
+          </li>
+          <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+            <a class="btn btn-whatsapp" href="https://wa.me/237693183918" target="_blank" rel="noopener">
+              <i class="fa-brands fa-whatsapp me-2"></i> Commander via WhatsApp
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero court -->
+  <section class="catalog-hero d-flex align-items-center text-white">
+    <div class="catalog-hero-overlay"></div>
+    <div class="container position-relative" data-aos="fade-up">
+      <h1 class="display-6 fw-bold mb-2">Notre Catalogue</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="index.html" class="link-light">Accueil</a></li>
+          <li class="breadcrumb-item active text-white" aria-current="page">Catalogue</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Barre de filtres -->
+  <section class="section" id="filters" data-aos="fade-up">
+    <div class="container">
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-lg-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un produit...">
+          </div>
+        </div>
+        <div class="col-12 col-lg-5">
+          <div class="btn-group flex-wrap" role="group" aria-label="Filtres catégories">
+            <button class="btn btn-filter active" data-filter="all">Tous</button>
+            <button class="btn btn-filter" data-filter="4y">4 yards</button>
+            <button class="btn btn-filter" data-filter="6y">6 yards</button>
+            <button class="btn btn-filter" data-filter="pret">Prêt-à-porter</button>
+          </div>
+        </div>
+        <div class="col-12 col-lg-3">
+          <select class="form-select" id="sortSelect" aria-label="Trier par prix">
+            <option value="asc">Prix : croissant</option>
+            <option value="desc">Prix : décroissant</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grille des produits -->
+  <section class="section pt-0" id="catalog-grid">
+    <div class="container">
+      <div class="row g-4" id="productsContainer">
+        <!-- Cards produits (12) -->
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Succès 4 yards" data-category="4y" data-price="20000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-1"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Succès 4 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">4 yards</span>
+                <span class="price">20 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Succès 6 yards" data-category="6y" data-price="39000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-2"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Succès 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">39 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection MaxiOr 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-3"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection MaxiOr 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Kit'or 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-4"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Kit'or 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Le Bassam 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-5"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Le Bassam 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Royal 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-6"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Royal 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Trésor 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-7"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Trésor 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Collection Perles 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-8"></div>
+            <div class="card-body">
+              <h5 class="card-title">Collection Perles 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Pagne Woodin Standard 6 yards" data-category="6y" data-price="29000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-9"></div>
+            <div class="card-body">
+              <h5 class="card-title">Pagne Woodin Standard 6 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">6 yards</span>
+                <span class="price">29 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Pagne Antiquity Wax" data-category="4y" data-price="20000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-10"></div>
+            <div class="card-body">
+              <h5 class="card-title">Pagne Antiquity Wax</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">4 yards</span>
+                <span class="price">20 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Haut croisé en pagne" data-category="pret" data-price="28000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-11"></div>
+            <div class="card-body">
+              <h5 class="card-title">Haut croisé en pagne</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-secondary">Prêt-à-porter</span>
+                <span class="price">28 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-name="Pagne du Ghana 4 yards" data-category="4y" data-price="15000">
+          <div class="product-card card h-100 product-hover">
+            <div class="product-thumb wax wax-12"></div>
+            <div class="card-body">
+              <h5 class="card-title">Pagne du Ghana 4 yards</h5>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">4 yards</span>
+                <span class="price">15 000 FCFA</span>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="produit.html" class="btn btn-outline-dark">Voir le détail</a>
+                <a href="https://wa.me/237693183918" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp me-2"></i>Commander</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer text-white pt-5 pb-4">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="brand-title">WOODIN</span>
+          </div>
+          <p class="text-muted mb-3">Le pagne d'exception — Élégance africaine, qualité premium.</p>
+          <div class="d-flex gap-3">
+            <a href="https://facebook.com" class="social-link" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://instagram.com" class="social-link" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://wa.me/237693183918" class="social-link" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <h6 class="footer-title">Navigation</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="catalogue.html">Catalogue</a></li>
+            <li><a href="boutiques.html">Boutiques</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-3">
+          <h6 class="footer-title">Nos Boutiques</h6>
+          <ul class="list-unstyled footer-links">
+            <li>Douala Akwa</li>
+            <li>Douala Bonamoussadi</li>
+            <li>Yaoundé</li>
+            <li>Ngaoundéré</li>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-3">
+          <h6 class="footer-title">Contact</h6>
+          <ul class="list-unstyled footer-links">
+            <li><i class="fa-solid fa-phone me-2"></i>+237 693 18 39 18</li>
+            <li><i class="fa-regular fa-envelope me-2"></i>contact.cm@belifegroupe.com</li>
+            <li><i class="fa-solid fa-location-dot me-2"></i>Douala, Cameroun</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="border-secondary mt-4 mb-3 opacity-25">
+      <div class="d-flex flex-column flex-md-row justify-content-between text-muted small">
+        <span>© 2025 Woodin Cameroun — Tous droits réservés</span>
+        <span>Maquette professionnelle — Présentation client</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flottant -->
+  <a href="https://wa.me/237693183918" target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat" aria-label="Discuter sur WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Tailwind CSS via CDN (requis) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Script personnalisé -->
+  <script src="assets/js/script.js"></script>
+  <script>
+    AOS.init({ once: true, offset: 80 });
+  </script>
+</body>
+</html>
