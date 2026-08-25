@@ -1,0 +1,20 @@
+<?php
+require_once __DIR__ . '/auth.php';
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = isset($_POST['action']) ? $_POST['action'] : '';
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    if ($action === 'save') {
+        $data = array(trim(isset($_POST['name']) ? $_POST['name'] : ''), trim(isset($_POST['description']) ? $_POST['description'] : ''), (float)(isset($_POST['price']) ? $_POST['price'] : 0), (int)(isset($_POST['stock']) ? $_POST['stock'] : 0), trim(isset($_POST['image_url']) ? $_POST['image_url'] : ''));
+        if ($id) { $data[] = $id; $pdo->prepare('UPDATE products SET name=?,description=?,price=?,stock=?,image_url=? WHERE id=?')->execute($data); }
+        else { $pdo->prepare('INSERT INTO products (name,description,price,stock,image_url) VALUES (?,?,?,?,?)')->execute($data); }
+        $message = 'Produit enregistré.';
+    } elseif ($action === 'delete' && $id) {
+        try { $pdo->prepare('DELETE FROM products WHERE id=?')->execute(array($id)); $message = 'Produit supprimé.'; }
+        catch (Exception $error) { $message = 'Impossible de supprimer ce produit lié à une commande.'; }
+    }
+}
+$edit = null;
+if (isset($_GET['edit'])) { $stmt = $pdo->prepare('SELECT * FROM products WHERE id=?'); $stmt->execute(array((int)$_GET['edit'])); $edit = $stmt->fetch(); }
+$products = $pdo->query('SELECT * FROM products ORDER BY id DESC')->fetchAll();
+?><!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Produits | Woodin Admin</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body><nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand text-warning" href="index.php">WOODIN ADMIN</a><a class="btn btn-warning btn-sm" href="logout.php">Déconnexion</a></div></nav><main class="container py-4"><div class="d-flex justify-content-between"><h1>Produits</h1><a class="btn btn-dark" href="products.php">Nouveau produit</a></div><?php if ($message): ?><div class="alert alert-info"><?= adminEscape($message) ?></div><?php endif; ?><form class="card p-3 my-4" method="post"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= (int)($edit ? $edit['id'] : 0) ?>"><div class="row g-2"><div class="col-md-6"><input class="form-control" name="name" required placeholder="Nom" value="<?= adminEscape($edit ? $edit['name'] : '') ?>"></div><div class="col-md-2"><input class="form-control" name="price" type="number" step=".01" required placeholder="Prix" value="<?= e($edit ? $edit['price'] : '') ?>"></div><div class="col-md-2"><input class="form-control" name="stock" type="number" required placeholder="Stock" value="<?= (int)($edit ? $edit['stock'] : 0) ?>"></div><div class="col-md-2"><input class="form-control" name="image_url" placeholder="Image" value="<?= adminEscape($edit ? $edit['image_url'] : '') ?>"></div><div class="col-12"><textarea class="form-control" name="description" required placeholder="Description"><?= adminEscape($edit ? $edit['description'] : '') ?></textarea></div><div class="col-12"><button class="btn btn-warning" type="submit">Enregistrer</button></div></div></form><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Nom</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead><tbody><?php foreach ($products as $product): ?><tr><td><?= adminEscape($product['name']) ?></td><td><?= number_format($product['price'], 0, ',', ' ') ?> FCFA</td><td><?= (int)$product['stock'] ?></td><td><a class="btn btn-sm btn-outline-dark" href="?edit=<?= (int)$product['id'] ?>">Modifier</a> <form class="d-inline" method="post"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$product['id'] ?>"><button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button></form></td></tr><?php endforeach; ?></tbody></table></div></main></body></html>
