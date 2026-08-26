@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /actions/
+Sitemap: https://woodin.cm/sitemap.xml

@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/config.php';
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+generateCsrfToken();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($GLOBALS['csrfFailureRendering'])) verifyCsrfToken();
+ob_start(function ($buffer) {
+    return preg_replace('/(<form\b(?=[^>]*\bmethod\s*=\s*["\']post["\'])[^>]*>)/i', '$1' . csrfField(), $buffer);
+});
 if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
 function cartCount() { return array_sum($_SESSION['cart']); }
 function cartProducts() {
@@ -11,8 +16,4 @@ function cartProducts() {
     $stmt->execute($ids);
     return $stmt->fetchAll();
 }
-function cartTotal() {
-    $total = 0;
-    foreach (cartProducts() as $product) $total += (float)$product['price'] * (isset($_SESSION['cart'][$product['id']]) ? $_SESSION['cart'][$product['id']] : 0);
-    return $total;
-}
+function cartTotal() { return cartGrandTotal(); }

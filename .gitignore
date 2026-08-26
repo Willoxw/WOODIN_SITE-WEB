@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.development
+!.env.production
+includes/config.php
+*.log
+/logs/
+/backups/
+/invoices/*.pdf
+/composer.phar
+/vendor/
+*.sql.bak
+/assets/images/produits/*
+!/assets/images/produits/.gitkeep
