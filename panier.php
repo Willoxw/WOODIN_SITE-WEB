@@ -5,6 +5,11 @@ $pageDescription = 'Consultez votre panier Woodin et finalisez votre commande.';
 $flash = isset($_SESSION['flash']) ? $_SESSION['flash'] : '';
 unset($_SESSION['flash']);
 $items = cartProducts();
+$items = array_map(function ($item) {
+	$item['original_price'] = $item['price'];
+	$item['price'] = productSalePrice($item);
+	return $item;
+}, $items);
 $customer = currentCustomer();
 $promoCode = strtoupper(trim(isset($_GET['promo']) ? $_GET['promo'] : ''));
 if ($promoCode !== '') {

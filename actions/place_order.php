@@ -34,8 +34,16 @@ try {
   $discountAmount = cartDiscount(); $total = round(max(0, $subtotal - $discountAmount), 2);
   $discount = validAppliedDiscount($subtotal);
   if (!$discount) { $discountAmount = 0; $total = $subtotal; }
-  $order = $pdo->prepare("INSERT INTO orders (customer_id,customer_name,customer_phone,customer_email,total_amount,discount_amount) VALUES (?,?,?,?,?,?)"); $order->execute([$customer ? $customer['id'] : null,$name,$phone,$email,$total,$discountAmount]); $orderId = $pdo->lastInsertId();
+  $invoiceToken = bin2hex(random_bytes(16));
+  $order = $pdo->prepare("INSERT INTO orders (customer_id,customer_name,customer_phone,customer_email,total_amount,discount_amount,invoice_token) VALUES (?,?,?,?,?,?,?)"); $order->execute([$customer ? $customer['id'] : null,$name,$phone,$email,$total,$discountAmount,$invoiceToken]); $orderId = $pdo->lastInsertId();
   if ($discount) { $usage = $pdo->prepare('UPDATE discounts SET usage_count = usage_count + 1 WHERE id = ? AND (usage_limit IS NULL OR usage_count < usage_limit)'); $usage->execute([$discount['id']]); if ($usage->rowCount() !== 1) throw new DomainException('Ce code promo vient d’être épuisé.'); if ($customer) $pdo->prepare('INSERT INTO discount_usage (customer_id,discount_id,order_id) VALUES (?,?,?)')->execute([$customer['id'],$discount['id'],$orderId]); }
-  foreach ($rows as $row) { $quantity = $cart[(int)$row['id']]; $pdo->prepare('INSERT INTO order_items (order_id,product_id,quantity,price) VALUES (?,?,?,?)')->execute([$orderId,$row['id'],$quantity,$row['price']]); $pdo->prepare('UPDATE products SET stock=stock-? WHERE id=?')->execute([$quantity,$row['id']]); $pdo->prepare("INSERT INTO stock_movements (product_id, quantity_change, reason) VALUES (?, ?, 'vente')")->execute([$row['id'], -$quantity]); }
-  $pdo->commit(); $invoicePath = generateInvoicePdf($orderId); $confirmation = ['id' => $orderId, 'customer_name' => $name, 'customer_email' => $email, 'total_amount' => $total, 'invoice_path' => $invoicePath]; sendOrderConfirmation($confirmation); $_SESSION['cart'] = []; unset($_SESSION['applied_discount']); $_SESSION['last_order_id'] = $orderId; redirect('../order_success.php');
+  foreach ($rows as $row) {
+    $quantity = $cart[(int)$row['id']];
+    $stockUpdate = $pdo->prepare('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?');
+    $stockUpdate->execute([$quantity, $row['id'], $quantity]);
+    if ($stockUpdate->rowCount() !== 1) throw new DomainException('Stock épuisé entre-temps, désolé.');
+    $pdo->prepare('INSERT INTO order_items (order_id,product_id,quantity,price) VALUES (?,?,?,?)')->execute([$orderId,$row['id'],$quantity,$row['price']]);
+    $pdo->prepare("INSERT INTO stock_movements (product_id, quantity_change, reason) VALUES (?, ?, 'vente')")->execute([$row['id'], -$quantity]);
+  }
+  $pdo->commit(); $invoicePath = generateInvoicePdf($orderId); $confirmation = ['id' => $orderId, 'customer_name' => $name, 'customer_email' => $email, 'total_amount' => $total, 'invoice_path' => $invoicePath]; sendOrderConfirmation($confirmation); $_SESSION['cart'] = []; unset($_SESSION['applied_discount']); $_SESSION['last_order'] = ['id' => (int)$orderId, 'invoice_token' => $invoiceToken]; unset($_SESSION['last_order_id']); redirect('../order_success.php');
 } catch (Exception $error) { if ($pdo->inTransaction()) $pdo->rollBack(); error_log($error->getMessage()); $_SESSION['flash'] = $error instanceof DomainException ? $error->getMessage() : 'Une erreur est survenue, veuillez réessayer.'; redirect('../panier.php'); }

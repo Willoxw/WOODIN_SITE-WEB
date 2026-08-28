@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/functions.php';
 $message = '';
 $error = '';
 $token = isset($_GET['token']) ? trim($_GET['token']) : '';
@@ -28,9 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $plainToken = bin2hex(function_exists('random_bytes') ? random_bytes(32) : openssl_random_pseudo_bytes(32));
             $reset = db()->prepare('INSERT INTO password_resets (customer_id,token_hash,expires_at) VALUES (?,?,DATE_ADD(NOW(), INTERVAL 1 HOUR))');
             $reset->execute([$customer['id'], hash('sha256', $plainToken)]);
-            $resetUrl = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/forgot_password.php?token=' . urlencode($plainToken);
-            // TODO: configurer SMTP réel
-            $message = 'Si cette adresse existe, un lien de réinitialisation a été envoyé. En local : ' . e($resetUrl);
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $resetUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/reset_password.php?token=' . urlencode($plainToken);
+            sendPasswordResetEmail($email, $resetUrl);
+            $message = 'Si cette adresse existe, un lien de réinitialisation a été envoyé.';
         } else {
             $message = 'Si cette adresse existe, un lien de réinitialisation a été envoyé.';
         }

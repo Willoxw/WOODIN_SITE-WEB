@@ -21,7 +21,7 @@ function verifyCsrfToken()
     if (!$stored || !$submitted || !$valid) {
         http_response_code(403);
         $GLOBALS['csrfFailureRendering'] = true;
-        require dirname(__DIR__) . '/403.php';
+        require dirname(__DIR__) . '/includes/403.php';
         exit;
     }
 }
@@ -37,6 +37,19 @@ function redirect($path)
     exit;
 }
 
+function requireAdminRole($role = 'gestionnaire')
+{
+    if (empty($_SESSION['admin_id'])) {
+        header('Location: /admin/login.php');
+        exit;
+    }
+    if ($role === 'super_admin' && (isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : '') !== 'super_admin') {
+        http_response_code(403);
+        require dirname(__DIR__) . '/403.php';
+        exit;
+    }
+}
+
 function sendOrderConfirmation($order)
 {
     $autoload = dirname(__DIR__) . '/vendor/autoload.php';
@@ -49,7 +62,6 @@ function sendOrderConfirmation($order)
     }
     try {
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-        // TODO: configurer SMTP réel
         $mail->isSMTP();
         $mail->Host = envValue('SMTP_HOST');
         $mail->SMTPAuth = true;
@@ -140,4 +152,30 @@ function cartDiscount()
 function cartGrandTotal()
 {
     return round(max(0, cartSubtotal() - cartDiscount()), 2);
+}
+
+function sendPasswordResetEmail($email, $resetLink)
+{
+    $autoload = dirname(__DIR__) . '/vendor/autoload.php';
+    if (!is_file($autoload)) return false;
+    require_once $autoload;
+    try {
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = envValue('SMTP_HOST');
+        $mail->SMTPAuth = true;
+        $mail->Username = envValue('SMTP_USER');
+        $mail->Password = envValue('SMTP_PASS');
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = (int)envValue('SMTP_PORT', 587);
+        $mail->setFrom(envValue('SMTP_FROM', 'no-reply@woodin.cm'), 'WOODIN Cameroun');
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Réinitialisation de votre mot de passe - WOODIN Cameroun';
+        $mail->Body = '<h2>Réinitialisation de mot de passe</h2><p>Ce lien expire dans 1 heure.</p><p><a href="' . e($resetLink) . '">Réinitialiser mon mot de passe</a></p><p>Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.</p>';
+        return $mail->send();
+    } catch (Exception $error) {
+        error_log('Email reset error: ' . $error->getMessage());
+        return false;
+    }
 }

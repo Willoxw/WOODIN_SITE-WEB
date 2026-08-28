@@ -18,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare('SELECT * FROM admins WHERE username = ?');
         $stmt->execute([$username]);
         $admin = $stmt->fetch();
-        if ($admin && password_verify(isset($_POST['password']) ? $_POST['password'] : '', $admin['password'])) {
+        if ($admin && !empty($admin['is_active']) && password_verify(isset($_POST['password']) ? $_POST['password'] : '', $admin['password'])) {
             session_regenerate_id(true);
             $pdo->prepare('UPDATE admins SET last_login = NOW() WHERE id = ?')->execute([$admin['id']]);
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
+            $_SESSION['admin_role'] = $admin['role'];
             $_SESSION['last_activity'] = time();
             header('Location: index.php');
             exit;

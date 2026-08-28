@@ -34,7 +34,45 @@ Sous Windows/WampServer, utiliser une commande équivalente depuis le dossier co
 & 'C:\wamp\bin\mysql\mysql8.0.x\bin\mysqldump.exe' --host=127.0.0.1 --user=root --password woodin_db > "backups\woodin_db_$(Get-Date -Format yyyyMMdd_HHmmss).sql"
 ```
 
+La sauvegarde depuis l’administration utilise `MYSQLDUMP_PATH`. Sous Windows, définir le chemin complet vers `mysqldump.exe` si la détection automatique ne trouve pas l’installation WampServer. En production Linux, laisser `MYSQLDUMP_PATH=mysqldump` si le binaire est dans le `PATH`.
+
 Planifier cette commande avec le Planificateur de tâches Windows et tester régulièrement la restauration.
+
+## SAUVEGARDES AUTOMATIQUES
+
+### Linux (production)
+
+Ajouter une tâche quotidienne avec `crontab -e` :
+
+```cron
+0 2 * * * /bin/bash /var/www/woodin/scripts/backup.sh
+```
+
+### Windows (WampServer de développement)
+
+Utiliser le Planificateur de tâches Windows avec l'action suivante :
+
+```text
+C:\Git\bin\bash.exe scripts/backup.sh
+```
+
+Configurer un déclencheur quotidien à 02h00. Consulter `scripts/backup.log` pour vérifier l'exécution. Les sauvegardes compressées sont conservées dans `backups/` au format `.sql.gz`, avec rotation des fichiers âgés de plus de sept jours.
+
+## MONITORING
+
+### Développement
+
+Consulter manuellement `logs/error.log` après un parcours de test. Le mode de développement affiche les erreurs PHP pour faciliter le diagnostic. Utiliser `APP_ENV=dev` dans l'environnement local.
+
+### Production
+
+Définir `APP_ENV=prod` côté serveur pour charger `.env.production`. Les erreurs sont masquées aux visiteurs et écrites dans `logs/error.log`. Une vérification quotidienne peut être ajoutée à cron :
+
+```cron
+0 8 * * * [ -s /var/www/woodin/logs/error.log ] && mail -s "WOODIN - Erreurs détectées" admin@example.com < /var/www/woodin/logs/error.log
+```
+
+Pour un suivi avancé, ajouter éventuellement `SENTRY_DSN=https://xxxxx@sentry.io/xxxxx` dans la configuration et intégrer le SDK Sentry adapté à l'hébergement.
 
 ## Avant mise en production
 

@@ -6,6 +6,7 @@ includes/config.php
 *.log
 /logs/
 /backups/
+/logs/*.log
 /invoices/*.pdf
 /composer.phar
 /vendor/

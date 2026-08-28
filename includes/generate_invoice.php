@@ -29,7 +29,8 @@ function generateInvoicePdf($orderId)
     $dompdf->loadHtml($html, 'UTF-8');
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
-    $path = $directory . '/facture_' . (int)$orderId . '.pdf';
+    if (empty($order['invoice_token'])) return false;
+    $path = $directory . '/facture_' . $order['invoice_token'] . '.pdf';
     file_put_contents($path, $dompdf->output());
     return $path;
 }
