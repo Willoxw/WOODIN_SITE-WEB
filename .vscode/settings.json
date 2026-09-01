@@ -1,0 +1,7 @@
+{
+  "php.validate.enable": true,
+  "php.validate.executablePath": "C:/wamp/bin/php/php5.5.12/php.exe",
+  "php.validate.run": "onType",
+  "intelephense.environment.phpVersion": "5.5.12",
+  "intelephense.diagnostics.enable": true
+}

@@ -1,6 +1,4 @@
 <?php
-define('ENVIRONMENT', getenv('APP_ENV') === 'prod' ? 'prod' : 'dev');
-
 require_once __DIR__ . '/functions.php';
 
 function loadEnv($path)
@@ -23,6 +21,9 @@ function loadEnv($path)
 }
 
 $projectRoot = dirname(__DIR__);
+$configuredEnvironment = getenv('APP_ENV') ?: getenv('ENVIRONMENT');
+$environment = $configuredEnvironment === 'prod' || $configuredEnvironment === 'production' ? 'prod' : 'dev';
+define('ENVIRONMENT', $environment);
 $environmentFile = ENVIRONMENT === 'prod' ? $projectRoot . '/.env.production' : $projectRoot . '/.env';
 if (is_readable($environmentFile)) {
     loadEnv($environmentFile);

@@ -5,7 +5,7 @@ unset($_SESSION['admin_flash']);
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 $page = max(1, (int)(isset($_GET['page']) ? $_GET['page'] : 1));
 $perPage = 20;
-$orderWhere = $filter === 'en_attente' ? " WHERE status = 'En attente'" : ($filter === 'en_attente_48h' ? " WHERE status = 'En attente' AND created_at < DATE_SUB(NOW(), INTERVAL 48 HOUR)" : '');
+$orderWhere = $filter === 'en_attente' ? " WHERE o.status = 'En attente'" : ($filter === 'en_attente_48h' ? " WHERE o.status = 'En attente' AND o.created_at < DATE_SUB(NOW(), INTERVAL 48 HOUR)" : '');
 $totalStmt = $pdo->prepare('SELECT COUNT(*) FROM orders' . $orderWhere);
 $totalStmt->execute();
 $totalPages = (int)ceil($totalStmt->fetchColumn() / $perPage);

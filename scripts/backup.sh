@@ -5,11 +5,12 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_NAME="${DB_NAME:-woodin_db}"
 DB_USER="${DB_USER:-root}"
 DB_PASS="${DB_PASS:-}"
-BACKUP_DIR="${BACKUP_DIR:-backups}"
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+BACKUP_DIR="${BACKUP_DIR:-$SCRIPT_DIR/../backups}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 backupFile="$BACKUP_DIR/${DB_NAME}_${TIMESTAMP}.sql"
-logFile="scripts/backup.log"
+logFile="${LOG_FILE:-$SCRIPT_DIR/backup.log}"
 
 if mysqldump --host="$DB_HOST" --user="$DB_USER" --password="$DB_PASS" "$DB_NAME" > "$backupFile" && gzip -f "$backupFile"; then
 	find "$BACKUP_DIR" -name '*.sql.gz' -mtime +7 -delete
