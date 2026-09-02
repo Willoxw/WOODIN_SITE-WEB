@@ -36,3 +36,101 @@ document.addEventListener('DOMContentLoaded', () => {
     search?.addEventListener('input', render); sort?.addEventListener('change', render);
   }
 });
+
+  // PARTIE 5: Feedback immédiat sur les boutons 'Ajouter au panier'
+  document.querySelectorAll('form[action="actions/add_to_cart.php"]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      const button = form.querySelector('button[type="submit"]');
+      if (!button) return;
+      
+      // Store original content
+      const originalHTML = button.innerHTML;
+      const originalClass = button.className;
+      
+      // Change button appearance immediately
+      button.innerHTML = '<i class="fa-solid fa-check"></i> Ajout...';
+      button.classList.add('btn-submitting');
+      button.disabled = true;
+      
+      // If page doesn't reload after 3 seconds, restore button
+      // (in case there's an error or validation issue)
+      const timeout = setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.className = originalClass;
+        button.disabled = false;
+      }, 3000);
+      
+      // Allow natural form submission
+    });
+  });
+
+  // PARTIE 6: Animated counters in stats-band
+  const animateCounters = () => {
+    const statItems = document.querySelectorAll('.stat-item strong');
+    if (statItems.length === 0) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        
+        const strong = entry.target;
+        const text = strong.textContent.trim();
+        
+        // Parse the number and any suffix (like +, %)
+        const match = text.match(/^(\d+)(.*)/);
+        if (!match) return;
+        
+        const finalValue = parseInt(match[1], 10);
+        const suffix = match[2];
+        
+        // Skip if already animated
+        if (strong.dataset.animated === 'true') return;
+        strong.dataset.animated = 'true';
+        
+        // Animation duration
+        const duration = 1500; // 1.5 seconds
+        const steps = 30;
+        const increment = finalValue / steps;
+        let current = 0;
+        const startTime = Date.now();
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          current = Math.floor(progress * finalValue);
+          strong.textContent = current + suffix;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            strong.textContent = finalValue + suffix;
+          }
+        };
+        
+        animate();
+        observer.unobserve(strong);
+      });
+    }, { threshold: 0.5 });
+    
+    statItems.forEach((item) => observer.observe(item));
+  };
+  
+  animateCounters();
+
+  // PARTIE 7: Hide splash screen
+  const hideSplash = () => {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+      // Wait max 800ms or until page is fully loaded
+      setTimeout(() => {
+        splash.classList.add('hidden');
+      }, 800);
+    }
+  };
+  
+  // Hide splash when page is loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('load', hideSplash);
+  } else {
+    hideSplash();
+  }
