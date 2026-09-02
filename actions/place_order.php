@@ -34,7 +34,7 @@ try {
   $discountAmount = cartDiscount(); $total = round(max(0, $subtotal - $discountAmount), 2);
   $discount = validAppliedDiscount($subtotal);
   if (!$discount) { $discountAmount = 0; $total = $subtotal; }
-  $invoiceToken = bin2hex(random_bytes(16));
+  $invoiceToken = bin2hex(function_exists('random_bytes') ? random_bytes(16) : (function_exists('openssl_random_pseudo_bytes') ? openssl_random_pseudo_bytes(16) : md5(uniqid((string)mt_rand(), true))));
   $order = $pdo->prepare("INSERT INTO orders (customer_id,customer_name,customer_phone,customer_email,total_amount,discount_amount,invoice_token) VALUES (?,?,?,?,?,?,?)"); $order->execute([$customer ? $customer['id'] : null,$name,$phone,$email,$total,$discountAmount,$invoiceToken]); $orderId = $pdo->lastInsertId();
   if ($discount) { $usage = $pdo->prepare('UPDATE discounts SET usage_count = usage_count + 1 WHERE id = ? AND (usage_limit IS NULL OR usage_count < usage_limit)'); $usage->execute([$discount['id']]); if ($usage->rowCount() !== 1) throw new DomainException('Ce code promo vient d’être épuisé.'); if ($customer) $pdo->prepare('INSERT INTO discount_usage (customer_id,discount_id,order_id) VALUES (?,?,?)')->execute([$customer['id'],$discount['id'],$orderId]); }
   foreach ($rows as $row) {

@@ -12,8 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verifyCsrfToken();
     $lock = $pdo->prepare('SELECT locked_until FROM login_attempts WHERE username = ? AND ip_address = ? AND locked_until > NOW() ORDER BY locked_until DESC LIMIT 1');
     $lock->execute([$username, $ipAddress]);
-    if ($lock->fetchColumn()) {
-        $error = 'Trop de tentatives. Réessayez dans 30 minutes.';
+    $lockUntil = $lock->fetchColumn();
+
+    if ($lockUntil) {
+        $lockTimestamp = strtotime($lockUntil);
+        $remainingSeconds = max(0, $lockTimestamp - time());
+        $remainingMinutes = max(1, (int) ceil($remainingSeconds / 60));
+        $error = 'Trop de tentatives, réessayez dans ' . $remainingMinutes . ' minute' . ($remainingMinutes > 1 ? 's' : '') . '.';
     } else {
         $stmt = $pdo->prepare('SELECT * FROM admins WHERE username = ?');
         $stmt->execute([$username]);
@@ -37,12 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lock = $pdo->prepare('UPDATE login_attempts SET locked_until = DATE_ADD(NOW(), INTERVAL 30 MINUTE) WHERE id = ?');
             $lock->execute([$attemptId]);
         }
-        $error = 'Identifiants invalides.';
+        $error = 'Identifiants incorrects.';
     }
 }
 ?>
 <!doctype html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Connexion administration | Woodin</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{min-height:100vh;display:grid;place-items:center;background:#1a1a1a}.card{max-width:420px;width:100%;border:0;border-radius:0}.brand{color:#f5c518;font:900 2rem Georgia}</style></head>
-<body><main class="card shadow p-4"><div class="brand mb-3">WOODIN</div><h1 class="h3">Administration</h1><p class="text-muted">Connectez-vous pour gérer la boutique.</p><?php if ($error): ?><div class="alert alert-danger"><?= e($error) ?></div><?php endif; ?><form method="post"><?= csrfField() ?><label class="form-label">Identifiant</label><input class="form-control mb-3" name="username" required value="<?= e($username) ?>"><label class="form-label">Mot de passe</label><input class="form-control mb-3" type="password" name="password" required><button class="btn btn-warning w-100" type="submit">Se connecter</button></form></main></body>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Connexion administration | Woodin</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{min-height:100vh;display:grid;place-items:center;background:#1a1a1a;color:#fff}.card{max-width:420px;width:100%;border:0;border-radius:0;background:#111;box-shadow:0 20px 40px rgba(0,0,0,.35)}.brand{color:#f5c518;font:900 2rem Georgia;letter-spacing:.1em}.btn-warning{background:#f5c518;border-color:#f5c518;color:#1a1a1a;font-weight:700}.form-control{background:#1a1a1a;color:#fff;border-color:#2a2a2a}.form-control:focus{background:#111;border-color:#f5c518;box-shadow:0 0 0 .25rem rgba(245,197,24,.12)}.text-muted{color:#d0d0d0!important}</style></head>
+<body><main class="card shadow p-4"><div class="brand mb-3">WOODIN</div><h1 class="h3">Administration</h1><p class="text-muted mb-3">Connectez-vous pour gérer la boutique.</p><?php if ($error): ?><div class="alert alert-danger"><?= e($error) ?></div><?php endif; ?><form method="post"><?= csrfField() ?><label class="form-label">Identifiant</label><input class="form-control mb-3" name="username" required value="<?= e($username) ?>"><label class="form-label">Mot de passe</label><input class="form-control mb-3" type="password" name="password" required><button class="btn btn-warning w-100" type="submit">Se connecter</button></form></main></body>
 </html>

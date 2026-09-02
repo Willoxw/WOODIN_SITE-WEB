@@ -37,6 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+const adminLoginPath = window.location.pathname.indexOf('/client/') !== -1 ? '../admin/login.php' : 'admin/login.php';
+document.addEventListener('keydown', function (e) {
+  if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
+    e.preventDefault();
+    window.location.href = adminLoginPath;
+  }
+});
+
   // PARTIE 5: Feedback immédiat sur les boutons 'Ajouter au panier'
   document.querySelectorAll('form[action="actions/add_to_cart.php"]').forEach((form) => {
     form.addEventListener('submit', (e) => {
@@ -117,20 +125,25 @@ document.addEventListener('DOMContentLoaded', () => {
   
   animateCounters();
 
-  // PARTIE 7: Hide splash screen
+  // PARTIE 7: Hide splash screen reliably
   const hideSplash = () => {
     const splash = document.getElementById('splashScreen');
     if (splash) {
-      // Wait max 800ms or until page is fully loaded
       setTimeout(() => {
         splash.classList.add('hidden');
       }, 800);
     }
   };
-  
-  // Hide splash when page is loaded
+
+  // Use both DOM and window load to ensure the overlay disappears
+  const onPageReady = () => {
+    requestAnimationFrame(() => {
+      hideSplash();
+    });
+  };
+
   if (document.readyState === 'loading') {
-    document.addEventListener('load', hideSplash);
+    document.addEventListener('DOMContentLoaded', onPageReady, { once: true });
   } else {
-    hideSplash();
+    onPageReady();
   }
