@@ -26,7 +26,8 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: linear-gradient(135deg, var(--black) 0%, rgba(139, 0, 0, 0.6) 100%);
+  background: radial-gradient(circle at 82% 18%, rgba(245,197,24,.22), transparent 26%),
+              linear-gradient(120deg, rgba(26,26,26,.96) 0%, rgba(93,0,0,.88) 100%) !important;
 }
 
 /* Decorative fabric pattern overlay */
@@ -253,6 +254,7 @@ button[type="submit"] {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.45s ease, visibility 0.45s ease;
+  animation: splashAutoHide 0s 1.5s forwards;
   pointer-events: none;
 }
 
@@ -304,6 +306,14 @@ button[type="submit"] {
   }
 }
 
+@keyframes splashAutoHide {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
 @keyframes splashPulse {
   0%, 100% {
     transform: scale(1);
@@ -342,56 +352,5 @@ button[type="submit"] {
     animation: none;
     width: 100%;
   }
-}
-
-/* FORCE CORRECT HERO STYLES - Override minified CSS */
-.hero-home {
-  background: linear-gradient(135deg, var(--black) 0%, rgba(139, 0, 0, 0.6) 100%) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  isolation: isolate !important;
-}
-
-.hero-home::before {
-  background: 
-    repeating-linear-gradient(
-      45deg,
-      rgba(245, 197, 24, 0.02),
-      rgba(245, 197, 24, 0.02) 2px,
-      transparent 2px,
-      transparent 8px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(139, 0, 0, 0.01),
-      rgba(139, 0, 0, 0.01) 1px,
-      transparent 1px,
-      transparent 6px
-    ) !important;
-  background-size: 40px 40px, 40px 40px !important;
-  background-attachment: fixed !important;
-  opacity: 0.18 !important;
-}
-
-.hero-content {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.hero-home h1 {
-  color: var(--cream) !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.hero-copy {
-  color: var(--cream) !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.hero-actions {
-  position: relative !important;
-  z-index: 1 !important;
 }
 

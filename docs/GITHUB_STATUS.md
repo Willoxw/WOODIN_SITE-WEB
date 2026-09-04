@@ -51,10 +51,10 @@ Ces fichiers ont été créés en local et ne sont pas dans le repo GitHub :
 ?? assets/images/pagne_royal.jpg     (Image produit générée)
 ?? assets/images/pagne_succes.jpg    (Image produit générée)
 ?? composer                          (Exécutable Composer)
-?? composer-setup.php                (Setup Composer)
+?? scripts/composer-setup.php        (Setup Composer)
 ?? docs/PROJET_A_CORRIGER.md         (Document problèmes locaux)
 ?? docs/PROJET_INVENTAIRE.md         (Document inventaire - NOUVEAU)
-?? repair_assets.ps1                 (Script génération images)
+?? scripts/repair_assets.ps1         (Script génération images)
 ```
 
 ---
@@ -86,8 +86,8 @@ Ajouter dans `.gitignore` :
 .vscode/
 assets/images/
 composer
-composer-setup.php
-repair_assets.ps1
+scripts/composer-setup.php
+scripts/repair_assets.ps1
 docs/PROJET_A_CORRIGER.md
 docs/PROJET_INVENTAIRE.md
 .env
@@ -95,7 +95,7 @@ docs/PROJET_INVENTAIRE.md
 
 Puis :
 ```bash
-git reset HEAD -- .vscode/ assets/images/ composer composer-setup.php repair_assets.ps1 docs/PROJET_A_CORRIGER.md docs/PROJET_INVENTAIRE.md
+git reset HEAD -- .vscode/ assets/images/ composer scripts/composer-setup.php scripts/repair_assets.ps1 docs/PROJET_A_CORRIGER.md docs/PROJET_INVENTAIRE.md
 ```
 
 ---
@@ -118,7 +118,7 @@ git reset HEAD -- .vscode/ assets/images/ composer composer-setup.php repair_ass
 ### À court terme (Avant QA)
 1. ✅ Garder `.vscode/settings.json` en local (aide diagnostic PHP)
 2. ✅ Garder images locales (nécessaires pour tests)
-3. ✅ Garder `repair_assets.ps1` (script utile de dev)
+3. ✅ Garder `scripts/repair_assets.ps1` (script utile de dev)
 4. ✅ Garder `docs/PROJET_A_CORRIGER.md` et `docs/PROJET_INVENTAIRE.md` (documentation locale)
 
 ### Avant mise en production

@@ -5,7 +5,7 @@
  */
 
 session_start();
-require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/../includes/config.php';
 
 $pdo = db();
 ?>
@@ -86,7 +86,7 @@ $pdo = db();
                     $stmt = $pdo->query("SELECT id, name, price, stock FROM products LIMIT 3");
                     $products = $stmt->fetchAll();
                 ?>
-                <form method="POST" action="actions/add_to_cart.php" style="margin-bottom: 15px;">
+                <form method="POST" action="../actions/add_to_cart.php" style="margin-bottom: 15px;">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="product_id" class="form-label">Produit:</label>
@@ -121,8 +121,8 @@ $pdo = db();
                     ?>
                 </div>
                 
-                <a href="panier.php" class="btn btn-info" target="_blank">👁️ Voir le Panier</a>
-                <a href="actions/clear_cart.php" class="btn btn-danger">🗑️ Vider le Panier</a>
+                <a href="../panier.php" class="btn btn-info" target="_blank">👁️ Voir le Panier</a>
+                <a href="../actions/clear_cart.php" class="btn btn-danger">🗑️ Vider le Panier</a>
             </div>
         </div>
 
@@ -161,7 +161,7 @@ $pdo = db();
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <a href="admin/login.php" class="btn btn-warning" target="_blank">🔐 Aller au Login Admin</a>
+                        <a href="../admin/login.php" class="btn btn-warning" target="_blank">🔐 Aller au Login Admin</a>
                     </div>
                 </div>
             </div>
@@ -177,7 +177,7 @@ $pdo = db();
                 <div class="card test-card success">
                     <div class="card-body">
                         <h5>🏠 Accueil</h5>
-                        <a href="index.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
+                        <a href="../index.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
                     </div>
                 </div>
             </div>
@@ -185,7 +185,7 @@ $pdo = db();
                 <div class="card test-card success">
                     <div class="card-body">
                         <h5>📦 Catalogue</h5>
-                        <a href="catalogue.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
+                        <a href="../catalogue.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
                     </div>
                 </div>
             </div>
@@ -193,7 +193,7 @@ $pdo = db();
                 <div class="card test-card success">
                     <div class="card-body">
                         <h5>📨 Contact</h5>
-                        <a href="contact.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
+                        <a href="../contact.php" class="btn btn-primary w-100" target="_blank">Visiter</a>
                     </div>
                 </div>
             </div>

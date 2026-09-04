@@ -111,8 +111,13 @@ if (isset($_GET['edit'])) {
     $edit = $stmt->fetch();
 }
 $categoryOptions = '<option value="">Choisir une catégorie</option>';
-foreach ($categories as $category) {
-    $selected = $edit && (int)$edit['category_id'] === (int)$category['id'] ? ' selected' : '';
+foreach ($categories as $index => $category) {
+    $selected = '';
+    if ($edit) {
+        $selected = (int)$edit['category_id'] === (int)$category['id'] ? ' selected' : '';
+    } elseif ($index === 0) {
+        $selected = ' selected';
+    }
     $categoryOptions .= '<option value="' . (int)$category['id'] . '"' . $selected . '>' . e($category['name']) . '</option>';
 }
 $deleteModal = '<div class="modal fade" id="deleteModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5>Confirmer la suppression</h5></div><div class="modal-body">Supprimer <strong id="deleteItemName"></strong> ? Cette action est irréversible.</div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button><form method="post"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" id="deleteItemId"><button class="btn btn-danger">Supprimer définitivement</button></form></div></div></div></div><script>document.getElementById("deleteModal").addEventListener("show.bs.modal",function(event){document.getElementById("deleteItemName").textContent=event.relatedTarget.dataset.itemName;document.getElementById("deleteItemId").value=event.relatedTarget.dataset.itemId;});</script>';

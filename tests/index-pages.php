@@ -206,7 +206,7 @@
             <div class="page-card">
                 <h3><i class="fa-solid fa-sparkles"></i> Test Visuels</h3>
                 <p>Page de démonstration de tous les effets visuels premium implémentés.</p>
-                <a href="http://localhost:8000/test-visual-effects.php" target="_blank">Ouvrir <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="http://localhost:8000/tests/test-visual-effects.php" target="_blank">Ouvrir <i class="fa-solid fa-arrow-right"></i></a>
                 <div class="status test">🧪 Page Test</div>
             </div>
         </div>

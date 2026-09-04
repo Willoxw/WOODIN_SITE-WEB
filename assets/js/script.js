@@ -16,24 +16,75 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeFilter = 'all';
     const search = document.querySelector('#productSearch');
     const sort = document.querySelector('#sortProducts');
+
+    const normalizeText = (value) => String(value || '').trim().toLowerCase();
+    const isVisible = (column) => !column.hidden && column.style.display !== 'none';
+
+    const applyColumnState = (column, isMatch) => {
+      column.hidden = !isMatch;
+      column.style.display = isMatch ? '' : 'none';
+      column.setAttribute('aria-hidden', String(!isMatch));
+    };
+
     const render = () => {
-      const query = (search?.value || '').trim().toLowerCase();
-      const visible = columns.filter((column) => {
-        const matchesFilter = activeFilter === 'all' || column.dataset.category === activeFilter;
-        const matchesSearch = !query || column.dataset.name.includes(query);
-        column.hidden = !(matchesFilter && matchesSearch);
-        return matchesFilter && matchesSearch;
+      const query = normalizeText(search?.value);
+      const activeFilterValue = normalizeText(activeFilter);
+      const visible = [];
+
+      columns.forEach((column) => {
+        const category = normalizeText(column.dataset.category);
+        const name = normalizeText(column.dataset.name);
+        const matchesFilter = activeFilterValue === 'all' || category.includes(activeFilterValue) || name.includes(activeFilterValue);
+        const matchesSearch = !query || name.includes(query) || category.includes(query) || String(column.textContent || '').toLowerCase().includes(query);
+        const isMatch = matchesFilter && matchesSearch;
+
+        applyColumnState(column, isMatch);
+        if (isMatch) visible.push(column);
       });
+
       if (sort?.value !== 'default') {
         const direction = sort.value === 'asc' ? 1 : -1;
-        visible.sort((a, b) => (Number(a.dataset.price) - Number(b.dataset.price)) * direction).forEach((item) => productGrid.appendChild(item));
+        visible.sort((a, b) => (Number(a.dataset.price) - Number(b.dataset.price)) * direction);
+        visible.forEach((item) => productGrid.appendChild(item));
+      }
+
+      columns.forEach((column) => {
+        if (!column.hidden && column.style.display === 'none') {
+          column.style.display = '';
+        }
+      });
+
+      const allMatches = columns.filter(isVisible);
+      const visibleCount = allMatches.length;
+      if (visibleCount === 0 && search && query) {
+        productGrid.setAttribute('data-empty-search', 'true');
+      } else {
+        productGrid.removeAttribute('data-empty-search');
       }
     };
+
     document.querySelectorAll('.filter-btn').forEach((button) => button.addEventListener('click', () => {
       document.querySelector('.filter-btn.active')?.classList.remove('active');
-      button.classList.add('active'); activeFilter = button.dataset.filter; render();
+      button.classList.add('active');
+      activeFilter = button.dataset.filter || 'all';
+      render();
     }));
-    search?.addEventListener('input', render); sort?.addEventListener('change', render);
+
+    search?.addEventListener('input', render);
+    sort?.addEventListener('change', render);
+    render();
+  }
+
+  // PARTIE 7 — Splash screen
+  const splash = document.getElementById('splashScreen');
+  if (splash) {
+    const hideSplash = () => splash.classList.add('hidden');
+    if (document.readyState === 'complete') {
+      setTimeout(hideSplash, 600);
+    } else {
+      window.addEventListener('load', () => setTimeout(hideSplash, 600), { once: true });
+      setTimeout(hideSplash, 1200); // filet JS : masque après 1.2s dans tous les cas
+    }
   }
 });
 
@@ -84,12 +135,13 @@ document.addEventListener('keydown', function (e) {
         const strong = entry.target;
         const text = strong.textContent.trim();
         
-        // Parse the number and any suffix (like +, %)
-        const match = text.match(/^(\d+)(.*)/);
+        // Parse the number and any suffix (like +, %), while keeping a possible span.percent intact.
+        const normalizedText = text.replace(/[+%\s]/g, '');
+        const match = normalizedText.match(/^(\d+)(.*)/);
         if (!match) return;
         
         const finalValue = parseInt(match[1], 10);
-        const suffix = match[2];
+        const suffix = match[2] || '';
         
         // Skip if already animated
         if (strong.dataset.animated === 'true') return;
@@ -106,12 +158,25 @@ document.addEventListener('keydown', function (e) {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / duration, 1);
           current = Math.floor(progress * finalValue);
-          strong.textContent = current + suffix;
+
+          // Préserver le <span class="percent"> s'il existe
+          const percentSpan = strong.querySelector('.percent');
+          if (percentSpan) {
+            strong.textContent = String(current);
+            strong.appendChild(percentSpan);
+          } else {
+            strong.textContent = String(current) + suffix;
+          }
           
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            strong.textContent = finalValue + suffix;
+            if (percentSpan) {
+              strong.textContent = String(finalValue);
+              strong.appendChild(percentSpan);
+            } else {
+              strong.textContent = String(finalValue) + suffix;
+            }
           }
         };
         
@@ -124,26 +189,3 @@ document.addEventListener('keydown', function (e) {
   };
   
   animateCounters();
-
-  // PARTIE 7: Hide splash screen reliably
-  const hideSplash = () => {
-    const splash = document.getElementById('splashScreen');
-    if (splash) {
-      setTimeout(() => {
-        splash.classList.add('hidden');
-      }, 800);
-    }
-  };
-
-  // Use both DOM and window load to ensure the overlay disappears
-  const onPageReady = () => {
-    requestAnimationFrame(() => {
-      hideSplash();
-    });
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', onPageReady, { once: true });
-  } else {
-    onPageReady();
-  }

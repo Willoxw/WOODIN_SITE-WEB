@@ -112,7 +112,7 @@
 
 ### 10. Scripts & Outils
 - ✅ `scripts/backup.sh` - Script sauvegarde MySQL
-- ✅ `repair_assets.ps1` - Script génération images (corrigé)
+- ✅ `scripts/repair_assets.ps1` - Script génération images (corrigé)
 
 ### 11. Dépendances Composer (Installées)
 - ✅ `vendor/autoload.php` - Autoloader
